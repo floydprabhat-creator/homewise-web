@@ -9,12 +9,14 @@ import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { FilePicker } from '@/components/ui/file-picker';
 import { FormField } from '@/components/ui/form-field';
+import { PayDialog } from '@/features/bills/components/pay-dialog';
+import { UnpaidBillNote } from '@/features/bills/components/unpaid-bill-note';
 import { UsagePreview } from '@/features/budget/components/usage-preview';
 import { useCategories } from '@/features/categories/api';
 import { CategoryPicker } from '@/features/categories/components/category-picker';
 import { earliestEntryDate, todayIST } from '@/lib/dates';
 import { applyApiErrors } from '@/lib/form-errors';
-import type { FailedFile, SpendingEntryDetail } from '@/types/api';
+import type { FailedFile, Occurrence, SpendingEntryDetail } from '@/types/api';
 import { MAX_FILES_PER_ENTRY } from '@/types/constants';
 import { useCreateSpending, useUpdateSpending } from '../api';
 import { spendingFormSchema, type SpendingFormInput, type SpendingFormValues } from '../schemas';
@@ -35,6 +37,7 @@ export function SpendingForm({ entry, onSaved, onCancel }: SpendingFormProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [filesError, setFilesError] = useState<string>();
   const [formError, setFormError] = useState<string | null>(null);
+  const [payingBill, setPayingBill] = useState<Occurrence | null>(null);
 
   const {
     register,
@@ -74,63 +77,70 @@ export function SpendingForm({ entry, onSaved, onCancel }: SpendingFormProps) {
   });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
-      {formError && <Alert>{formError}</Alert>}
+    <>
+      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
+        {formError && <Alert>{formError}</Alert>}
 
-      <Field id="spending-amount" label="Amount" error={errors.amount?.message}>
-        {(control) => (
-          <AffixInput {...control} prefix="₹" emphasis inputMode="decimal" placeholder="0" autoFocus={!entry} {...register('amount')} />
-        )}
-      </Field>
-
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Field id="spending-category" label="Category" error={errors.categoryId?.message}>
+        <Field id="spending-amount" label="Amount" error={errors.amount?.message}>
           {(control) => (
-            <CategoryPicker
-              {...control}
-              categories={categories}
-              current={entry?.category}
-              {...register('categoryId')}
-            />
+            <AffixInput {...control} prefix="₹" emphasis inputMode="decimal" placeholder="0" autoFocus={!entry} {...register('amount')} />
           )}
         </Field>
-        <FormField
-          id="spending-date"
-          label="Date"
-          type="date"
-          min={earliestEntryDate()}
-          max={todayIST()}
-          error={errors.date?.message}
-          {...register('date')}
-        />
-      </div>
 
-      <FormField id="spending-note" label="Note" aside="Optional" maxLength={200} placeholder="e.g. Birthday cake" error={errors.note?.message} {...register('note')} />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Field id="spending-category" label="Category" error={errors.categoryId?.message}>
+            {(control) => (
+              <CategoryPicker
+                {...control}
+                categories={categories}
+                current={entry?.category}
+                {...register('categoryId')}
+              />
+            )}
+          </Field>
+          <FormField
+            id="spending-date"
+            label="Date"
+            type="date"
+            min={earliestEntryDate()}
+            max={todayIST()}
+            error={errors.date?.message}
+            {...register('date')}
+          />
+        </div>
 
-      <UsagePreview month={month} bucket={bucket} amount={Number(String(typedAmount).replace(/,/g, ''))} removed={removed} />
+        {!entry && categoryId && <UnpaidBillNote categoryId={categoryId} date={date || todayIST()} onPay={setPayingBill} />}
 
-      {!entry && (
-        <FilePicker
-          label="Bill photo or PDF"
-          files={files}
-          onChange={(f) => {
-            setFiles(f);
-            setFilesError(undefined);
-          }}
-          max={MAX_FILES_PER_ENTRY}
-          error={filesError}
-          onError={setFilesError}
-        />
-      )}
+        <FormField id="spending-note" label="Note" aside="Optional" maxLength={200} placeholder="e.g. Birthday cake" error={errors.note?.message} {...register('note')} />
 
-      <div className="mt-1 flex gap-2.5">
-        <Button variant="secondary" size="lg" className="flex-1" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button type="submit" size="lg" className="flex-[2]" loading={create.isPending || update.isPending}>
-          {entry ? 'Save changes' : 'Save entry'}
-        </Button>
-      </div>
-    </form>
+        <UsagePreview month={month} bucket={bucket} amount={Number(String(typedAmount).replace(/,/g, ''))} removed={removed} />
+
+        {!entry && (
+          <FilePicker
+            label="Bill photo or PDF"
+            files={files}
+            onChange={(f) => {
+              setFiles(f);
+              setFilesError(undefined);
+            }}
+            max={MAX_FILES_PER_ENTRY}
+            error={filesError}
+            onError={setFilesError}
+          />
+        )}
+
+        <div className="mt-1 flex gap-2.5">
+          <Button variant="secondary" size="lg" className="flex-1" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit" size="lg" className="flex-[2]" loading={create.isPending || update.isPending}>
+            {entry ? 'Save changes' : 'Save entry'}
+          </Button>
+        </div>
+      </form>
+
+      {/* Outside the form: the pay form is a <form> of its own. Paying records the spending, so this form closes. */}
+      <PayDialog occurrence={payingBill} onClose={() => setPayingBill(null)} onPaid={onCancel} />
+    </>
   );
 }
