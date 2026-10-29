@@ -1,6 +1,6 @@
 'use client';
 
-import { PieChart, Plus } from 'lucide-react';
+import { PieChart } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState, type ReactNode } from 'react';
@@ -94,17 +94,7 @@ export function DashboardView() {
       <PageHeader
         title="Dashboard"
         description={description}
-        actions={
-          <>
-            <MonthPicker month={month} max={latest} onChange={setMonth} />
-            {!readOnly && (
-              <Link href="/spending" className={buttonStyles()}>
-                <Plus aria-hidden className="size-[18px]" strokeWidth={2.4} />
-                Add spending
-              </Link>
-            )}
-          </>
-        }
+        actions={<MonthPicker month={month} max={latest} onChange={setMonth} />}
       />
 
       {error ? (
