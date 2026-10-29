@@ -96,15 +96,17 @@ function CategoryRow({ category, canEdit }: { category: Category; canEdit: boole
   }
 
   return (
-    <li className="flex min-h-14 flex-wrap items-center gap-x-3 gap-y-1 px-6 py-2">
-      <span className={cn('flex-1 text-body', archived && 'text-muted-foreground line-through')}>{category.name}</span>
+    // Archived rows are tinted red, with a red badge, so they stand apart when "Show archived" is on.
+    <li className={cn('flex min-h-14 flex-wrap items-center gap-x-3 gap-y-1 px-6 py-2', archived && 'bg-danger-subtle')}>
+      <span className={cn('flex-1 text-body', archived && 'text-danger line-through')}>{category.name}</span>
       {category.isSystem && (
         <Badge shape="tag" tone="neutral">
           Default
         </Badge>
       )}
       {archived && (
-        <Badge shape="tag" tone="neutral">
+        // Solid red: the subtle red badge would vanish against the red-tinted row.
+        <Badge shape="tag" tone="danger" className="bg-danger text-danger-foreground">
           Archived
         </Badge>
       )}
