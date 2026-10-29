@@ -1,4 +1,13 @@
-import type { Bucket, HouseholdType, Role } from './constants';
+import type {
+  BillAmountType,
+  BillStatus,
+  Bucket,
+  DisplayStatus,
+  Frequency,
+  HouseholdType,
+  OccurrenceStatus,
+  Role,
+} from './constants';
 
 export type User = {
   id: string;
@@ -98,6 +107,58 @@ export type SpendingFilters = {
 };
 
 export type FailedFile = { name: string; reason: string };
+
+/** A bill template (Manage bills tab). */
+export type Bill = {
+  id: string;
+  name: string;
+  amountType: BillAmountType;
+  amount: string;
+  frequency: Frequency;
+  firstDueDate: string;
+  remindDaysBefore: number;
+  status: BillStatus;
+  category: { id: string; name: string; bucket: Bucket };
+  defaultAssigneeId: string | null;
+  defaultAssigneeName: string | null;
+  nextDueDate: string | null;
+  nextAmountDue: string | null;
+};
+
+/** One period of a bill, with its calculated status and the person responsible. */
+export type Occurrence = {
+  id: string;
+  dueDate: string;
+  amountDue: string;
+  assigneeId: string | null;
+  status: OccurrenceStatus;
+  paidAmount: string | null;
+  paidAt: string | null;
+  paidBy: { id: string; name: string } | null;
+  bill: {
+    id: string;
+    name: string;
+    frequency: Frequency;
+    amountType: BillAmountType;
+    remindDaysBefore: number;
+    status: BillStatus;
+  };
+  category: { id: string; name: string; bucket: Bucket };
+  transactionId: string | null;
+  receiptCount: number;
+  displayStatus: DisplayStatus;
+  responsibleUserId: string | null;
+  responsibleName: string;
+  isAssignedToHead: boolean;
+};
+
+export type OccurrenceQuery = {
+  from?: string;
+  to?: string;
+  status?: OccurrenceStatus;
+  includeOverdue?: boolean;
+  billId?: string;
+};
 
 export type ApiErrorBody = {
   error: { code: string; message: string; fields?: Record<string, string> };

@@ -1,4 +1,4 @@
-import type { SpendingFilters } from '@/types/api';
+import type { OccurrenceQuery, SpendingFilters } from '@/types/api';
 
 export const queryKeys = {
   me: ['me'] as const,
@@ -9,5 +9,9 @@ export const queryKeys = {
   spending: (filters: SpendingFilters) => ['spending', filters] as const,
   spendingAll: ['spending'] as const,
   spendingEntry: (id: string) => ['spending', 'entry', id] as const,
+  bills: (includeArchived = false) => ['bills', { includeArchived }] as const,
+  billsAll: ['bills'] as const,
+  occurrences: (query: OccurrenceQuery) => ['occurrences', query] as const,
+  occurrencesAll: ['occurrences'] as const,
   dashboard: ['dashboard'] as const,
 };

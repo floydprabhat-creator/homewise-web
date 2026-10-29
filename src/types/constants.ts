@@ -8,6 +8,24 @@ export type HouseholdType = (typeof HOUSEHOLD_TYPES)[number];
 export const BUCKETS = ['ESSENTIALS', 'LIFESTYLE', 'SAVINGS'] as const;
 export type Bucket = (typeof BUCKETS)[number];
 
+export const FREQUENCIES = ['ONE_TIME', 'MONTHLY', 'QUARTERLY', 'YEARLY'] as const;
+export type Frequency = (typeof FREQUENCIES)[number];
+
+export const BILL_AMOUNT_TYPES = ['FIXED', 'VARIABLE'] as const;
+export type BillAmountType = (typeof BILL_AMOUNT_TYPES)[number];
+
+export type BillStatus = 'ACTIVE' | 'PAUSED' | 'ARCHIVED';
+export type OccurrenceStatus = 'UNPAID' | 'PAID';
+/** Calculated by the API from IST today; never stored. */
+export type DisplayStatus = 'OVERDUE' | 'DUE_SOON' | 'UPCOMING' | 'PAID';
+
+export const FREQUENCY_LABELS: Record<Frequency, string> = {
+  ONE_TIME: 'One time',
+  MONTHLY: 'Monthly',
+  QUARTERLY: 'Quarterly',
+  YEARLY: 'Yearly',
+};
+
 export const SESSION_COOKIE = 'hw_session';
 
 // Mirrors the API's MAX_FILE_BYTES, MAX_FILES_PER_ENTRY and ALLOWED_FILE_TYPES.

@@ -15,5 +15,12 @@ export function addMonths(month: string, n: number) {
   return `${Math.floor(index / 12)}-${String((index % 12) + 1).padStart(2, '0')}`;
 }
 
+/** Shift a YYYY-MM-DD date by n days. */
+export function addDays(date: string, n: number) {
+  const d = new Date(`${date}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
 /** Spending can be dated from the 1st of last month (IST) up to today. */
 export const earliestEntryDate = () => `${addMonths(currentMonthIST(), -1)}-01`;
