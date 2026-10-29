@@ -48,7 +48,7 @@ export function ManageBills({ selectedId, onEdit, onCreate }: ManageBillsProps) 
           {bills.length} {bills.length === 1 ? 'bill' : 'bills'}
         </span>
         <Chip pressed={showArchived} onClick={() => setShowArchived((v) => !v)}>
-          Show archived
+          {showArchived ? 'Hide archived' : 'Show archived'}
         </Chip>
       </div>
 

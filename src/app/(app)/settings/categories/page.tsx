@@ -29,7 +29,7 @@ export default function CategoriesPage() {
         }
         actions={
           <Chip pressed={showArchived} onClick={() => setShowArchived((v) => !v)}>
-            Show archived
+            {showArchived ? 'Hide archived' : 'Show archived'}
           </Chip>
         }
       />
