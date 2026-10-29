@@ -10,6 +10,7 @@ import { HouseholdCard } from '@/features/household/components/household-card';
 import { InviteForm } from '@/features/household/components/invite-form';
 import { MembersList } from '@/features/household/components/members-list';
 import { PendingInvites } from '@/features/household/components/pending-invites';
+import { RolesCard } from '@/features/household/components/roles-card';
 import { apiErrorMessage } from '@/lib/form-errors';
 
 /** Members see this page read-only; head-only controls are hidden by role (the API checks again). */
@@ -33,19 +34,25 @@ export default function FamilyPage() {
           <Spinner className="size-6" />
         </div>
       ) : (
-        <div className="flex max-w-3xl flex-col gap-6">
-          <HouseholdCard household={household.data.household} canEdit={isHead} />
-          {isHead && isFamily && (
-            <Card className="flex flex-col gap-4">
-              <CardTitle>Invite a member</CardTitle>
-              <InviteForm />
-              <div className="flex flex-col gap-2 border-t border-border pt-4">
-                <span className="text-caption font-bold tracking-wide text-muted-foreground uppercase">Pending invites</span>
-                {invites.data ? <PendingInvites invites={invites.data} /> : <Spinner className="text-accent" />}
-              </div>
-            </Card>
-          )}
-          <MembersList members={household.data.members} userId={session.user.id} canRemove={isHead} />
+        // Two columns on wide screens: who is in the family on the left, adding people on the right.
+        <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_400px]">
+          <div className="flex min-w-0 flex-col gap-6">
+            <HouseholdCard household={household.data.household} canEdit={isHead} />
+            <MembersList members={household.data.members} userId={session.user.id} canRemove={isHead} />
+          </div>
+          <div className="flex flex-col gap-6 xl:sticky xl:top-8">
+            {isHead && isFamily && (
+              <Card className="flex flex-col gap-4">
+                <CardTitle>Invite a member</CardTitle>
+                <InviteForm />
+                <div className="flex flex-col gap-2 border-t border-border pt-4">
+                  <span className="text-caption font-bold tracking-wide text-muted-foreground uppercase">Pending invites</span>
+                  {invites.data ? <PendingInvites invites={invites.data} /> : <Spinner className="text-accent" />}
+                </div>
+              </Card>
+            )}
+            <RolesCard />
+          </div>
         </div>
       )}
     </>

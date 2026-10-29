@@ -27,10 +27,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-background lg:flex">
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col justify-between bg-sidebar px-4 py-6 lg:flex">
         <div className="flex flex-col gap-8">
-          <div className="flex items-center justify-between gap-2 pl-2">
-            <Logo inverse />
-            <Bell />
-          </div>
+          <Logo inverse className="px-2" />
           <SidebarNav />
         </div>
         <UserCard />
@@ -58,7 +55,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div id="mobile-menu" className="flex flex-col gap-4 border-t border-white/15 px-4 pt-3 pb-4">
             <SidebarNav onNavigate={() => setMenuOpen(false)} />
             {/* The top bar already has the theme toggle. */}
-            <UserCard showThemeToggle={false} />
+            <UserCard variant="menu" />
           </div>
         )}
       </header>

@@ -8,13 +8,14 @@ import { DuePanel } from './due-panel';
 import { NotificationList } from './notification-list';
 
 type BellProps = {
-  /** 'left': drops from the button (sidebar). 'screen': spans the screen under the mobile top bar. */
-  placement?: 'left' | 'screen';
+  /** 'sidebar': opens to the right of the sidebar, bottom-aligned. 'screen': spans the screen under the mobile top bar. */
+  placement?: 'sidebar' | 'screen';
   className?: string;
+  buttonClassName?: string;
 };
 
 /** Bell with the unread count (capped at 9+). Opens bills due soon / overdue and the notification list. */
-export function Bell({ placement = 'left', className }: BellProps) {
+export function Bell({ placement = 'sidebar', className, buttonClassName }: BellProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const panelId = useId();
@@ -42,13 +43,14 @@ export function Bell({ placement = 'left', className }: BellProps) {
         aria-expanded={open}
         aria-controls={panelId}
         onClick={() => setOpen((v) => !v)}
-        className="relative flex size-10 items-center justify-center rounded-control text-white hover:bg-white/15"
+        title="Notifications"
+        className={cn('relative flex size-10 items-center justify-center rounded-control text-white hover:bg-white/15', buttonClassName)}
       >
         <BellIcon aria-hidden className="size-5" />
         {unread > 0 && (
           <span
             aria-hidden
-            className="absolute -top-0.5 -right-0.5 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-sidebar bg-danger px-1 text-[11px] font-extrabold text-danger-foreground"
+            className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-sidebar bg-danger px-1 text-[11px] font-extrabold text-danger-foreground"
           >
             {unread > 9 ? '9+' : unread}
           </span>
@@ -59,7 +61,8 @@ export function Bell({ placement = 'left', className }: BellProps) {
           id={panelId}
           className={cn(
             'z-40 flex max-h-[min(560px,80vh)] flex-col overflow-hidden rounded-card border border-border bg-card text-foreground shadow-xl',
-            placement === 'left' ? 'absolute top-full left-0 mt-2 w-[380px]' : 'fixed inset-x-4 top-[72px]',
+            // Beside the 240px sidebar (w-60), lined up with its bottom.
+            placement === 'sidebar' ? 'fixed bottom-6 left-64 w-[380px]' : 'fixed inset-x-4 top-[72px]',
           )}
         >
           <DuePanel onNavigate={() => setOpen(false)} />
