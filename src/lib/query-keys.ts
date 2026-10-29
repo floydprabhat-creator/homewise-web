@@ -3,6 +3,8 @@ import type { OccurrenceQuery, SpendingFilters } from '@/types/api';
 export const queryKeys = {
   me: ['me'] as const,
   household: ['household'] as const,
+  invites: ['household', 'invites'] as const,
+  invitePreview: (token: string) => ['invite', token] as const,
   categories: (includeArchived = false) => ['categories', { includeArchived }] as const,
   recommendation: ['budget', 'recommendation'] as const,
   budget: (month: string) => ['budget', month] as const,

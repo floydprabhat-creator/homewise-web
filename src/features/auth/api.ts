@@ -7,11 +7,12 @@ import type { LoginValues, RegisterValues } from './schemas';
 /** Where to send a user right after they log in or sign up. */
 export const landingPath = (session: Session) => (session.needsOnboarding ? '/onboarding' : '/dashboard');
 
-export function useMe() {
+export function useMe({ enabled = true } = {}) {
   return useQuery({
     queryKey: queryKeys.me,
     queryFn: () => api<Session>('/auth/me'),
     retry: false,
+    enabled,
   });
 }
 
@@ -26,7 +27,8 @@ export function useLogin() {
 export function useRegister() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (values: RegisterValues) => api<Session>('/auth/register', { method: 'POST', body: values }),
+    mutationFn: (values: RegisterValues & { inviteToken?: string }) =>
+      api<Session>('/auth/register', { method: 'POST', body: values }),
     onSuccess: (session) => queryClient.setQueryData(queryKeys.me, session),
   });
 }

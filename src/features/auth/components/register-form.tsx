@@ -11,10 +11,18 @@ import { Divider } from '@/components/ui/divider';
 import { FormField } from '@/components/ui/form-field';
 import { PasswordField } from '@/components/ui/password-field';
 import { applyApiErrors } from '@/lib/form-errors';
+import type { Session } from '@/types/api';
 import { landingPath, useRegister } from '../api';
 import { registerSchema, type RegisterValues } from '../schemas';
 
-export function RegisterForm() {
+type RegisterFormProps = {
+  /** Signing up from an invite: the email is fixed and the account joins the family as a member. */
+  invite?: { token: string; email: string };
+  onRegistered?: (session: Session) => void;
+  embedded?: boolean;
+};
+
+export function RegisterForm({ invite, onRegistered, embedded = false }: RegisterFormProps = {}) {
   const router = useRouter();
   const registerUser = useRegister();
   const [formError, setFormError] = useState<string | null>(null);
@@ -23,12 +31,15 @@ export function RegisterForm() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<RegisterValues>({ resolver: zodResolver(registerSchema) });
+  } = useForm<RegisterValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { name: '', email: invite?.email ?? '', password: '' },
+  });
 
   const onSubmit = handleSubmit((values) => {
     setFormError(null);
-    registerUser.mutate(values, {
-      onSuccess: (session) => router.replace(landingPath(session)),
+    registerUser.mutate(invite ? { ...values, inviteToken: invite.token } : values, {
+      onSuccess: (session) => (onRegistered ? onRegistered(session) : router.replace(landingPath(session))),
       onError: (error) => setFormError(applyApiErrors(error, setError, ['name', 'email', 'password'])),
     });
   });
@@ -44,7 +55,9 @@ export function RegisterForm() {
           label="Email"
           type="email"
           autoComplete="email"
-          className="h-12"
+          readOnly={Boolean(invite)}
+          hint={invite ? 'The email this invite was sent to' : undefined}
+          className="h-12 read-only:bg-neutral read-only:text-muted-foreground"
           error={errors.email?.message}
           {...register('email')}
         />
@@ -63,11 +76,15 @@ export function RegisterForm() {
         </Button>
       </form>
 
+      {!embedded && (
+        <>
       <Divider>Already have an account?</Divider>
 
       <Link href="/login" className={buttonStyles({ variant: 'outline', size: 'lg', className: 'w-full' })}>
         Log in
       </Link>
+        </>
+      )}
     </div>
   );
 }

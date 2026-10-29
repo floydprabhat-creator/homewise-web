@@ -12,10 +12,19 @@ import { Divider } from '@/components/ui/divider';
 import { FormField } from '@/components/ui/form-field';
 import { PasswordField } from '@/components/ui/password-field';
 import { applyApiErrors } from '@/lib/form-errors';
+import type { Session } from '@/types/api';
 import { landingPath, useLogin } from '../api';
 import { loginSchema, type LoginValues } from '../schemas';
 
-export function LoginForm() {
+type LoginFormProps = {
+  defaultEmail?: string;
+  /** Replaces the usual redirect, e.g. the invite page continues to "Join" after logging in. */
+  onLoggedIn?: (session: Session) => void;
+  /** Inside another flow: no sign-up links below the form. */
+  embedded?: boolean;
+};
+
+export function LoginForm({ defaultEmail, onLoggedIn, embedded = false }: LoginFormProps = {}) {
   const router = useRouter();
   const login = useLogin();
   const [formError, setFormError] = useState<string | null>(null);
@@ -24,12 +33,12 @@ export function LoginForm() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
+  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema), defaultValues: { email: defaultEmail ?? '', password: '' } });
 
   const onSubmit = handleSubmit((values) => {
     setFormError(null);
     login.mutate(values, {
-      onSuccess: (session) => router.replace(landingPath(session)),
+      onSuccess: (session) => (onLoggedIn ? onLoggedIn(session) : router.replace(landingPath(session))),
       onError: (error) => setFormError(applyApiErrors(error, setError, ['email', 'password'])),
     });
   });
@@ -63,6 +72,8 @@ export function LoginForm() {
         </Button>
       </form>
 
+      {!embedded && (
+        <>
       <Divider>New here?</Divider>
 
       <Link href="/register" className={buttonStyles({ variant: 'outline', size: 'lg', className: 'w-full' })}>
@@ -72,6 +83,8 @@ export function LoginForm() {
       <Alert tone="brand" icon={Mail}>
         Invited to a family? Open the link in your invite email to join it.
       </Alert>
+        </>
+      )}
     </div>
   );
 }
