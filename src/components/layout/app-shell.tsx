@@ -25,7 +25,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background lg:flex">
-      <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col justify-between bg-sidebar px-4 py-6 lg:flex">
+      {/* z-30: sticky makes the sidebar its own stacking layer, so the bell panel inside it can only
+          sit above the main content if the whole sidebar does. */}
+      <aside className="sticky top-0 z-30 hidden h-screen w-60 shrink-0 flex-col justify-between bg-sidebar px-4 py-6 lg:flex">
         <div className="flex flex-col gap-8">
           <Logo inverse className="px-2" />
           <SidebarNav />
