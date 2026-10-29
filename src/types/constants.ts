@@ -1,4 +1,4 @@
-// Copied from homewise-api/src/shared/constants.ts. Keep in sync.
+// Copied from homewise-api/src/domain/constants.ts. Keep in sync.
 export const ROLES = ['HEAD', 'MEMBER'] as const;
 export type Role = (typeof ROLES)[number];
 
