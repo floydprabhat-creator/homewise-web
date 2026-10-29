@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Info } from 'lucide-react';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { AffixInput } from '@/components/ui/affix-input';
@@ -11,6 +10,7 @@ import { Field } from '@/components/ui/field';
 import { FilePicker } from '@/components/ui/file-picker';
 import { FormField } from '@/components/ui/form-field';
 import { Modal } from '@/components/ui/modal';
+import { UsagePreview } from '@/features/budget/components/usage-preview';
 import { earliestEntryDate, todayIST } from '@/lib/dates';
 import { applyApiErrors } from '@/lib/form-errors';
 import { formatDate, formatINR } from '@/lib/format';
@@ -44,7 +44,7 @@ export function PayForm({ occurrence, onPaid, onCancel }: PayFormProps) {
     resolver: zodResolver(payFormSchema),
     defaultValues: { paidAmount: String(Number(occurrence.amountDue)), paidAt: todayIST() },
   });
-  const typed = useWatch({ control, name: 'paidAmount' });
+  const [typed, paidAt] = useWatch({ control, name: ['paidAmount', 'paidAt'] });
   const amount = Number(String(typed).replace(/,/g, ''));
 
   const onSubmit = handleSubmit((values) => {
@@ -100,9 +100,12 @@ export function PayForm({ occurrence, onPaid, onCancel }: PayFormProps) {
       />
 
       {amount > 0 && (
-        <Alert tone="brand" icon={Info} className="text-caption">
-          Adds {formatINR(amount)} to {BUCKET_INFO[occurrence.category.bucket].label} as {occurrence.category.name} spending.
-        </Alert>
+        <UsagePreview
+          month={paidAt.slice(0, 7)}
+          bucket={occurrence.category.bucket}
+          amount={amount}
+          lead={`Adds ${formatINR(amount)} to ${BUCKET_INFO[occurrence.category.bucket].label} as ${occurrence.category.name} spending.`}
+        />
       )}
 
       <div className="flex gap-2.5">

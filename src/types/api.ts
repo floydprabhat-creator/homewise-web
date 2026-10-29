@@ -59,7 +59,38 @@ export type Budget = {
   updatedAt: string;
 };
 
-export type BudgetResponse = { month: string; budget: Budget | null; usage: null };
+export type BucketState = 'OK' | 'WARNING' | 'EXCEEDED' | 'TARGET_REACHED';
+
+/** Every usage figure for a month, from usage.service.getBudgetUsage() in the API. */
+export type BudgetUsage = {
+  month: string;
+  totalBudget: string | null;
+  spent: string;
+  remaining: string | null;
+  committed: string;
+  committedCount: number;
+  available: string | null;
+  percentUsed: number | null;
+  state: 'OK' | 'WARNING' | 'EXCEEDED';
+  buckets: {
+    bucket: Bucket;
+    percentAllocated: number;
+    limit: string;
+    spent: string;
+    percentOfQuota: number | null;
+    state: BucketState;
+  }[];
+  targets: {
+    categoryId: string;
+    categoryName: string;
+    targetPercent: number;
+    actualPercent: number;
+    spent: string;
+    reached: boolean;
+  }[];
+};
+
+export type BudgetResponse = { month: string; budget: Budget | null; usage: BudgetUsage };
 
 export type Recommendation = {
   allocations: Allocations;

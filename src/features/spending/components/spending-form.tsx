@@ -2,13 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { AffixInput } from '@/components/ui/affix-input';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { FilePicker } from '@/components/ui/file-picker';
 import { FormField } from '@/components/ui/form-field';
+import { UsagePreview } from '@/features/budget/components/usage-preview';
 import { useCategories } from '@/features/categories/api';
 import { CategoryPicker } from '@/features/categories/components/category-picker';
 import { earliestEntryDate, todayIST } from '@/lib/dates';
@@ -37,6 +38,7 @@ export function SpendingForm({ entry, onSaved, onCancel }: SpendingFormProps) {
 
   const {
     register,
+    control,
     handleSubmit,
     setError,
     formState: { errors },
@@ -46,6 +48,12 @@ export function SpendingForm({ entry, onSaved, onCancel }: SpendingFormProps) {
       ? { amount: String(Number(entry.amount)), categoryId: entry.category.id, date: entry.date, note: entry.note ?? '' }
       : { amount: '', categoryId: '', date: todayIST(), note: '' },
   });
+
+  // Preview against the month the entry is dated in; when editing, the original amount is taken out first.
+  const [typedAmount, categoryId, date] = useWatch({ control, name: ['amount', 'categoryId', 'date'] });
+  const bucket = categories.find((c) => c.id === categoryId)?.bucket;
+  const month = (date || todayIST()).slice(0, 7);
+  const removed = entry && entry.date.startsWith(month) && entry.category.bucket === bucket ? Number(entry.amount) : 0;
 
   const onSubmit = handleSubmit((values) => {
     setFormError(null);
@@ -98,6 +106,8 @@ export function SpendingForm({ entry, onSaved, onCancel }: SpendingFormProps) {
       </div>
 
       <FormField id="spending-note" label="Note" aside="Optional" maxLength={200} placeholder="e.g. Birthday cake" error={errors.note?.message} {...register('note')} />
+
+      <UsagePreview month={month} bucket={bucket} amount={Number(String(typedAmount).replace(/,/g, ''))} removed={removed} />
 
       {!entry && (
         <FilePicker
