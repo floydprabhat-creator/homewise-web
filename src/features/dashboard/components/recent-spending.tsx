@@ -1,4 +1,4 @@
-import { initials } from '@/components/ui/avatar';
+import { MemberAvatar } from '@/features/household/components/member-avatar';
 import { formatDate, formatINR } from '@/lib/format';
 import type { DashboardResponse } from '@/types/api';
 
@@ -15,9 +15,11 @@ export function RecentSpending({ entries, userId }: RecentSpendingProps) {
         const who = e.recordedBy.id === userId ? 'You' : e.recordedBy.isFormerMember ? `${e.recordedBy.name} (former member)` : e.recordedBy.name;
         return (
           <li key={e.id} className="flex items-center gap-3 py-2">
-            <span aria-hidden className="flex size-[34px] shrink-0 items-center justify-center rounded-full bg-primary-subtle text-xs font-extrabold text-accent">
-              {initials(e.recordedBy.name)}
-            </span>
+            <MemberAvatar
+              userId={e.recordedBy.id}
+              name={e.recordedBy.name}
+              className="size-[34px] border-0 bg-primary-subtle text-xs font-extrabold text-accent"
+            />
             <div className="flex min-w-0 flex-1 flex-col">
               <span className="truncate text-sm font-semibold">{e.note ?? e.category.name}</span>
               <span className="truncate text-xs text-muted-foreground">

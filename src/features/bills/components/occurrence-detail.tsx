@@ -4,12 +4,12 @@ import { TriangleAlert, Undo2 } from 'lucide-react';
 import { useState } from 'react';
 import { AffixInput } from '@/components/ui/affix-input';
 import { Alert } from '@/components/ui/alert';
-import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { FieldError } from '@/components/ui/field-error';
 import { ConfirmDialog } from '@/components/ui/modal';
 import { Select } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
+import { MemberAvatar } from '@/features/household/components/member-avatar';
 import { useSpendingEntry } from '@/features/spending/api';
 import { AttachmentViewer } from '@/features/spending/components/attachment-viewer';
 import { apiErrorMessage } from '@/lib/form-errors';
@@ -160,7 +160,7 @@ function Responsible({ occurrence: o, viewer, members, editable }: ResponsiblePr
 
   return (
     <div className="flex items-center gap-2.5">
-      <Avatar name={o.responsibleName} className="size-8 text-xs font-extrabold" />
+      <MemberAvatar userId={o.responsibleUserId} name={o.responsibleName} className="size-8 text-xs font-extrabold" />
       <span className="flex-1 text-body font-semibold">
         {o.responsibleName}
         {o.responsibleUserId === viewer.userId && ' (you)'}

@@ -1,7 +1,7 @@
 'use client';
 
-import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { MemberAvatar } from '@/features/household/components/member-avatar';
 import { cn } from '@/lib/cn';
 import { formatDate, formatINR } from '@/lib/format';
 import type { Occurrence } from '@/types/api';
@@ -98,7 +98,7 @@ function BillRow({ occurrence: o, viewer, selected, onSelect, onUndo }: BillRowP
         <span className="text-caption text-muted-foreground">{occurrenceMeta(o)}</span>
       </div>
       <div className="flex flex-[0_1_180px] items-center gap-2">
-        <Avatar name={person} className="size-7 text-[11px] font-extrabold" />
+        <MemberAvatar userId={personId} name={person} className="size-7 text-[11px] font-extrabold" />
         <div className="flex min-w-0 flex-col">
           <span className="truncate text-caption font-semibold">
             {person}

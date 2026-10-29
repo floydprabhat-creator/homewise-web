@@ -57,7 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div id="mobile-menu" className="flex flex-col gap-4 border-t border-white/15 px-4 pt-3 pb-4">
             <SidebarNav onNavigate={() => setMenuOpen(false)} />
             {/* The top bar already has the theme toggle. */}
-            <UserCard variant="menu" />
+            <UserCard variant="menu" onNavigate={() => setMenuOpen(false)} />
           </div>
         )}
       </header>

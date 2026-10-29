@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Avatar } from '@/components/ui/avatar';
 import { useMe } from '@/features/auth/api';
 import { LogoutButton } from '@/features/auth/components/logout-button';
@@ -20,8 +21,8 @@ type UserCardProps = {
   variant?: 'sidebar' | 'menu';
 };
 
-/** Signed-in user at the bottom of the sidebar, with the account actions. */
-export function UserCard({ variant = 'sidebar' }: UserCardProps) {
+/** Signed-in user at the bottom of the sidebar, with the account actions. The card opens the profile. */
+export function UserCard({ variant = 'sidebar', onNavigate }: UserCardProps & { onNavigate?: () => void }) {
   const { data: session } = useMe();
 
   return (
@@ -33,10 +34,15 @@ export function UserCard({ variant = 'sidebar' }: UserCardProps) {
           <LogoutButton inverse iconOnly className={sidebarTile} />
         </div>
       )}
-      <div className="rounded-card bg-white/10 p-3">
+      <Link
+        href="/settings/profile"
+        onClick={onNavigate}
+        title="Your profile"
+        className="block rounded-card bg-white/10 p-3 transition-colors hover:bg-white/20"
+      >
         {session ? (
           <div className="flex items-center gap-3">
-            <Avatar name={session.user.name} size="md" inverse />
+            <Avatar name={session.user.name} src={session.user.avatarUrl} size="md" inverse />
             <div className="min-w-0">
               <p className="truncate text-body font-bold text-white">{session.user.name}</p>
               <p className="truncate text-caption text-white/80">
@@ -49,7 +55,7 @@ export function UserCard({ variant = 'sidebar' }: UserCardProps) {
         ) : (
           <div className="h-11" />
         )}
-      </div>
+      </Link>
       {variant === 'menu' && <LogoutButton inverse className={cn(sidebarTile, 'gap-2 text-caption font-semibold')} />}
     </div>
   );

@@ -28,7 +28,7 @@ export function MembersList({ members, userId, canRemove }: MembersListProps) {
       <ul className="divide-y divide-border border-t border-border">
         {members.map((m) => (
           <li key={m.userId} className="flex flex-wrap items-center gap-3 px-6 py-4">
-            <Avatar name={m.name} />
+            <Avatar name={m.name} src={m.avatarUrl} />
             <div className="flex min-w-0 flex-1 flex-col">
               <span className="flex flex-wrap items-center gap-2 font-semibold">
                 {m.name}
