@@ -1,0 +1,88 @@
+/*
+ * HomeWise design tokens, copied from the "HomeWise Design Samples" canvas
+ * (https://claude.ai/artifact/Mag7qyuNTJb5msGicpxgcn): the tokens() function in each screen.
+ * Values marked "derived" are not in the canvas. Usage rules: requirements/theme.md.
+ *
+ * Light is the default. Dark applies when <html data-theme="dark"> is set by the theme toggle;
+ * the choice is saved in localStorage and restored before first paint (see app/layout.tsx).
+ */
+
+:root {
+  color-scheme: light;
+
+  --background: #ffffff;
+  --foreground: #212121;
+  --muted-foreground: #676c72;
+  --card: #ffffff;
+  --input: #ffffff;
+  --border: #e0e0e0;
+
+  --primary: #5f259f;
+  --primary-hover: #4a1c7c;
+  --primary-foreground: #ffffff;
+  --primary-subtle: #f3edfa;
+  --primary-soft: #dccbf0;
+  --accent: #5f259f;
+  --ring: #5f259f;
+  --focus-border: #5f259f;
+  --focus-ring: #ede3f8;
+  --sidebar: #5f259f;
+  --track: #efeaf5;
+  --disabled: #ede7f4;
+  --disabled-foreground: #8e8496;
+
+  --neutral: #f2f2f3;
+  --neutral-foreground: #4f545a;
+  --success: #1e7b3c;
+  --success-subtle: #e7f5ec;
+  --warning: #9a5b00;
+  --warning-bar: #e08a00;
+  --warning-subtle: #fff3e0;
+  --danger: #c62828;
+  --danger-foreground: #ffffff;
+  --danger-subtle: #fdecec;
+
+  --bucket-essentials: #5f259f;
+  --bucket-lifestyle: #b48be6;
+  --bucket-savings: #1e7b3c;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --background: #1a1a1a;
+  --foreground: #f5f5f5;
+  --muted-foreground: #a1a1a1;
+  --card: #242424;
+  --input: #1f1f1f;
+  --border: #2d2d2d;
+
+  --primary: #7a3bc2;
+  --primary-hover: #6a32a9; /* derived */
+  --primary-foreground: #ffffff;
+  --primary-subtle: #2e2338;
+  --primary-soft: #4a3860;
+  --accent: #c4a3ee;
+  --ring: #c4a3ee;
+  --focus-border: #9b6bd6;
+  --focus-ring: #3a2c4a;
+  --sidebar: #2a1f36;
+  --track: #33293d;
+  --disabled: #2e2a33; /* derived */
+  --disabled-foreground: #7f7787; /* derived */
+
+  --neutral: #2e2e2e;
+  --neutral-foreground: #c9ccd1;
+  --success: #6fd69a;
+  --success-subtle: #17301f;
+  --warning: #f5b54a;
+  --warning-bar: #f5a524;
+  --warning-subtle: #33270f;
+  --danger: #f59a9a;
+  --danger-foreground: #1a1a1a;
+  --danger-subtle: #3a1c1c;
+
+  --bucket-essentials: #9b6bd6;
+  --bucket-lifestyle: #d7bff5;
+  --bucket-savings: #4cc07e;
+}
