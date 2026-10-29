@@ -2,7 +2,7 @@ import { Badge, type BadgeTone } from '@/components/ui/badge';
 import { cn } from '@/lib/cn';
 import type { DisplayStatus } from '@/types/constants';
 
-export const STATUS_INFO: Record<DisplayStatus, { label: string; tone: BadgeTone }> = {
+const STATUS_INFO: Record<DisplayStatus, { label: string; tone: BadgeTone }> = {
   OVERDUE: { label: 'Overdue', tone: 'danger' },
   DUE_SOON: { label: 'Due soon', tone: 'warning' },
   UPCOMING: { label: 'Upcoming', tone: 'neutral' },

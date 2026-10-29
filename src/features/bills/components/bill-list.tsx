@@ -22,7 +22,7 @@ export type Viewer = { userId: string; isHead: boolean };
 export const canPay = (o: Occurrence, viewer: Viewer) =>
   o.status === 'UNPAID' && (viewer.isHead || o.responsibleUserId === viewer.userId);
 
-export function occurrenceMeta(o: Occurrence) {
+function occurrenceMeta(o: Occurrence) {
   if (o.status === 'PAID') {
     return `Paid ${o.paidAt ? formatDate(o.paidAt) : ''}${o.receiptCount > 0 ? ' · receipt attached' : ''}`;
   }

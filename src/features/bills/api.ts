@@ -60,7 +60,7 @@ export function useCreateBill() {
   });
 }
 
-export type UpdateBillInput = Partial<Omit<BillFormValues, 'frequency' | 'firstDueDate'>> & {
+type UpdateBillInput = Partial<Omit<BillFormValues, 'frequency' | 'firstDueDate'>> & {
   status?: 'ACTIVE' | 'PAUSED';
 };
 
@@ -95,7 +95,7 @@ export function useUpdateOccurrence() {
   });
 }
 
-export type PayInput = { paidAmount: string; paidAt: string };
+type PayInput = { paidAmount: string; paidAt: string };
 
 export function usePayOccurrence() {
   const invalidate = useInvalidatePayment();

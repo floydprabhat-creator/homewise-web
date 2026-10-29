@@ -10,7 +10,7 @@ import { ThemeToggle } from './theme-toggle';
 const ROLE_LABEL = { HEAD: 'Head', MEMBER: 'Member' } as const;
 
 /** Square tiles on the purple sidebar. */
-export const sidebarTile = 'h-11 w-full rounded-control bg-white/10 hover:bg-white/20';
+const sidebarTile = 'h-11 w-full rounded-control bg-white/10 hover:bg-white/20';
 
 type UserCardProps = {
   /**
