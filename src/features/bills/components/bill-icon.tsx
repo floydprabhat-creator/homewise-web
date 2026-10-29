@@ -1,4 +1,5 @@
 import { createElement } from 'react';
+import { cn } from '@/lib/cn';
 import {
   Droplet,
   Flame,
@@ -30,9 +31,9 @@ function iconFor(categoryName: string, billName: string): LucideIcon {
 }
 
 /** Icon tile for a bill row. */
-export function BillIcon({ categoryName, billName }: { categoryName: string; billName: string }) {
+export function BillIcon({ categoryName, billName, className }: { categoryName: string; billName: string; className?: string }) {
   return (
-    <span className="flex size-11 shrink-0 items-center justify-center rounded-card bg-primary-subtle text-accent">
+    <span className={cn('flex size-11 shrink-0 items-center justify-center rounded-card bg-primary-subtle text-accent', className)}>
       {createElement(iconFor(categoryName, billName), { 'aria-hidden': true, className: 'size-5' })}
     </span>
   );

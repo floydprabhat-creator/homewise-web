@@ -183,6 +183,27 @@ export type Occurrence = {
   isAssignedToHead: boolean;
 };
 
+/** GET /dashboard: every widget for one month. */
+export type DashboardResponse = {
+  month: string;
+  isCurrentMonth: boolean;
+  daysLeft: number | null;
+  usage: BudgetUsage;
+  breakdown: {
+    bucket: Bucket;
+    spent: string;
+    categories: { categoryId: string; name: string; spent: string }[];
+  }[];
+  comparison: {
+    previousMonth: string;
+    total: { current: string; previous: string; changePercent: number | null };
+    buckets: { bucket: Bucket; current: string; previous: string; changePercent: number | null }[];
+  } | null;
+  bills: Occurrence[];
+  recentSpending: Omit<SpendingEntry, 'attachmentCount'>[];
+  warnings: { scope: Bucket | 'OVERALL'; state: 'WARNING' | 'EXCEEDED' }[];
+};
+
 export type OccurrenceQuery = {
   from?: string;
   to?: string;

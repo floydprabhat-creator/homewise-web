@@ -14,4 +14,5 @@ export const queryKeys = {
   occurrences: (query: OccurrenceQuery) => ['occurrences', query] as const,
   occurrencesAll: ['occurrences'] as const,
   dashboard: ['dashboard'] as const,
+  dashboardMonth: (month: string) => ['dashboard', month] as const,
 };
