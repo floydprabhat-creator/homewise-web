@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { useMe } from '@/features/auth/api';
+import { Bell } from '@/features/notifications/components/bell';
 import { Logo } from './logo';
 import { SidebarNav } from './sidebar';
 import { ThemeToggle } from './theme-toggle';
@@ -26,7 +27,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-background lg:flex">
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col justify-between bg-sidebar px-4 py-6 lg:flex">
         <div className="flex flex-col gap-8">
-          <Logo inverse className="px-2" />
+          <div className="flex items-center justify-between gap-2 pl-2">
+            <Logo inverse />
+            <Bell />
+          </div>
           <SidebarNav />
         </div>
         <UserCard />
@@ -36,6 +40,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="flex h-16 items-center justify-between px-4">
           <Logo inverse />
           <div className="flex items-center gap-1">
+            <Bell placement="screen" />
             <ThemeToggle inverse />
             <Button
               variant="inverse"

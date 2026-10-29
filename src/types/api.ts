@@ -223,3 +223,16 @@ export type OccurrenceQuery = {
 export type ApiErrorBody = {
   error: { code: string; message: string; fields?: Record<string, string> };
 };
+
+export type AppNotification = {
+  id: string;
+  type: string;
+  title: string;
+  body: string;
+  /** In-app path, e.g. /bills. */
+  link: string | null;
+  readAt: string | null;
+  createdAt: string;
+};
+
+export type NotificationList = { items: AppNotification[]; unreadCount: number; page: number; pageSize: number };

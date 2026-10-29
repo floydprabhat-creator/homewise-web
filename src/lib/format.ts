@@ -32,3 +32,15 @@ export function formatBytes(bytes: number) {
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
+
+const relative = new Intl.RelativeTimeFormat('en-IN', { numeric: 'auto' });
+
+/** "just now", "5 min ago", "3 hours ago", "yesterday", then "27 Oct". */
+export function formatRelative(iso: string, now = Date.now()) {
+  const seconds = Math.round((new Date(iso).getTime() - now) / 1000);
+  if (seconds > -60) return 'just now';
+  if (seconds > -3600) return relative.format(Math.round(seconds / 60), 'minute');
+  if (seconds > -86_400) return relative.format(Math.round(seconds / 3600), 'hour');
+  if (seconds > -2 * 86_400) return relative.format(-1, 'day');
+  return formatDate(new Date(iso).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' }));
+}
