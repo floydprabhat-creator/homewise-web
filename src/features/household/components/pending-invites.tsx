@@ -28,7 +28,8 @@ export function PendingInvites({ invites }: { invites: Invite[] }) {
                 <Mail aria-hidden className="size-4" />
               </span>
               <div className="flex min-w-0 flex-1 flex-col">
-                <span className="truncate font-semibold">{invite.email}</span>
+                <span className="truncate font-semibold">{invite.name ?? invite.email}</span>
+                {invite.name && <span className="truncate text-caption text-muted-foreground">{invite.email}</span>}
                 <span className="text-caption text-muted-foreground">
                   {expired ? `Expired ${formatDate(invite.expiresAt.slice(0, 10))}` : `Sent ${formatDate(invite.updatedAt.slice(0, 10))} · expires ${formatDate(invite.expiresAt.slice(0, 10))}`}
                 </span>

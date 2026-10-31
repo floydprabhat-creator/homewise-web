@@ -52,7 +52,9 @@ function useInviteMutation<T>(mutationFn: (arg: T) => Promise<unknown>) {
 }
 
 export const useCreateInvite = () =>
-  useInviteMutation((email: string) => api<{ invite: Invite }>('/household/invites', { method: 'POST', body: { email } }));
+  useInviteMutation((input: { email: string; name?: string }) =>
+    api<{ invite: Invite }>('/household/invites', { method: 'POST', body: input }),
+  );
 export const useResendInvite = () =>
   useInviteMutation((id: string) => api<{ invite: Invite }>(`/household/invites/${id}/resend`, { method: 'POST' }));
 export const useRevokeInvite = () =>

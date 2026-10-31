@@ -17,7 +17,7 @@ import { registerSchema, type RegisterValues } from '../schemas';
 
 type RegisterFormProps = {
   /** Signing up from an invite: the email is fixed and the account joins the family as a member. */
-  invite?: { token: string; email: string };
+  invite?: { token: string; email: string; name: string | null };
   onRegistered?: (session: Session) => void;
   embedded?: boolean;
 };
@@ -33,7 +33,7 @@ export function RegisterForm({ invite, onRegistered, embedded = false }: Registe
     formState: { errors },
   } = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { name: '', email: invite?.email ?? '', password: '' },
+    defaultValues: { name: invite?.name ?? '', email: invite?.email ?? '', password: '' },
   });
 
   const onSubmit = handleSubmit((values) => {

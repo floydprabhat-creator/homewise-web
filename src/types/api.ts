@@ -46,10 +46,10 @@ export type HouseholdResponse = { household: HouseholdSummary; members: Member[]
 export type InviteStatus = 'PENDING' | 'ACCEPTED' | 'REVOKED' | 'EXPIRED';
 
 /** An invite as the head sees it on the family page. */
-export type Invite = { id: string; email: string; status: InviteStatus; expiresAt: string; createdAt: string; updatedAt: string };
+export type Invite = { id: string; email: string; name: string | null; status: InviteStatus; expiresAt: string; createdAt: string; updatedAt: string };
 
 /** GET /invites/:token, public. */
-export type InvitePreview = { familyName: string; inviterName: string; email: string; status: InviteStatus; expiresAt: string };
+export type InvitePreview = { familyName: string; inviterName: string; email: string; name: string | null; status: InviteStatus; expiresAt: string };
 
 export type Category = {
   id: string;

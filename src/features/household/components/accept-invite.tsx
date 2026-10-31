@@ -101,7 +101,7 @@ export function AcceptInvite({ token, hasSession }: { token: string; hasSession:
           ]}
         />
         {mode === 'register' ? (
-          <RegisterForm key="register" embedded invite={{ token, email: invite.email }} onRegistered={done} />
+          <RegisterForm key="register" embedded invite={{ token, email: invite.email, name: invite.name }} onRegistered={done} />
         ) : (
           <LoginForm key="login" embedded defaultEmail={invite.email} onLoggedIn={() => setLoggedIn(true)} />
         )}
