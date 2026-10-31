@@ -160,7 +160,7 @@ export function AcceptInvite({ token, hasSession }: { token: string; hasSession:
             <Link href="/dashboard" className={buttonStyles({ variant: 'secondary', size: 'lg', className: 'flex-1' })}>
               Cancel
             </Link>
-            <Button size="lg" className="flex-[2]" loading={accept.isPending} onClick={() => join(true)}>
+            <Button size="lg" className="flex-2" loading={accept.isPending} onClick={() => join(true)}>
               Archive and join
             </Button>
           </div>

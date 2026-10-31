@@ -182,7 +182,7 @@ export function BillForm({ bill, members, onSaved, onCancel }: BillFormProps) {
         <Button variant="secondary" size="lg" className="flex-1" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" size="lg" className="flex-[2]" loading={create.isPending || update.isPending}>
+        <Button type="submit" size="lg" className="flex-2" loading={create.isPending || update.isPending}>
           {bill ? 'Save changes' : 'Create bill'}
         </Button>
       </div>

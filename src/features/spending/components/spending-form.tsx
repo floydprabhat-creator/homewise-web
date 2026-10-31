@@ -133,7 +133,7 @@ export function SpendingForm({ entry, onSaved, onCancel }: SpendingFormProps) {
           <Button variant="secondary" size="lg" className="flex-1" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit" size="lg" className="flex-[2]" loading={create.isPending || update.isPending}>
+          <Button type="submit" size="lg" className="flex-2" loading={create.isPending || update.isPending}>
             {entry ? 'Save changes' : 'Save entry'}
           </Button>
         </div>

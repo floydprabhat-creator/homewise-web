@@ -112,7 +112,7 @@ export function PayForm({ occurrence, onPaid, onCancel }: PayFormProps) {
         <Button variant="secondary" size="lg" className="flex-1" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" size="lg" className="flex-[2]" loading={pay.isPending}>
+        <Button type="submit" size="lg" className="flex-2" loading={pay.isPending}>
           Confirm payment
         </Button>
       </div>
