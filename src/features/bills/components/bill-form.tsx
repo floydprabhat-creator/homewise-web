@@ -11,9 +11,10 @@ import { FormField } from '@/components/ui/form-field';
 import { Select } from '@/components/ui/select';
 import { useCategories } from '@/features/categories/api';
 import { CategoryPicker } from '@/features/categories/components/category-picker';
+import { ScanBill } from '@/features/scan/components/scan-bill';
 import { todayIST } from '@/lib/dates';
 import { applyApiErrors } from '@/lib/form-errors';
-import type { Bill, Member } from '@/types/api';
+import type { Bill, Member, ScannedBill } from '@/types/api';
 import { FREQUENCIES, FREQUENCY_LABELS } from '@/types/constants';
 import { useCreateBill, useUpdateBill } from '../api';
 import { billFormSchema, type BillFormInput, type BillFormValues } from '../schemas';
@@ -49,6 +50,7 @@ export function BillForm({ bill, members, onSaved, onCancel }: BillFormProps) {
     control,
     handleSubmit,
     setError,
+    setValue,
     formState: { errors },
   } = useForm<BillFormInput, unknown, BillFormValues>({
     resolver: zodResolver(billFormSchema),
@@ -76,6 +78,16 @@ export function BillForm({ bill, members, onSaved, onCancel }: BillFormProps) {
   });
   const amountType = useWatch({ control, name: 'amountType' });
 
+  /** Fills in what the bill showed; the bill file itself isn't kept (receipts are attached when paying). */
+  function applyScan(scanned: ScannedBill) {
+    const fill = { shouldDirty: true, shouldValidate: true };
+    if (scanned.merchant) setValue('name', scanned.merchant.slice(0, 80), fill);
+    if (scanned.categoryId) setValue('categoryId', scanned.categoryId, fill);
+    if (scanned.amount) setValue('amount', scanned.amount, fill);
+    if (scanned.frequency) setValue('frequency', scanned.frequency, fill);
+    if (scanned.dueDate) setValue('firstDueDate', scanned.dueDate, fill);
+  }
+
   const onSubmit = handleSubmit((values) => {
     setFormError(null);
     const onError = (error: Error) => setFormError(applyApiErrors(error, setError, FIELDS));
@@ -94,6 +106,8 @@ export function BillForm({ bill, members, onSaved, onCancel }: BillFormProps) {
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
       {formError && <Alert>{formError}</Alert>}
+
+      {!bill && <ScanBill onScanned={applyScan} />}
 
       <FormField id="bill-name" label="Name" maxLength={80} placeholder="e.g. Electricity" autoFocus={!bill} error={errors.name?.message} {...register('name')} />
 

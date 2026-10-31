@@ -18,4 +18,5 @@ export const queryKeys = {
   notifications: ['notifications'] as const,
   dashboard: ['dashboard'] as const,
   dashboardMonth: (month: string) => ['dashboard', month] as const,
+  scanStatus: ['scan', 'status'] as const,
 };

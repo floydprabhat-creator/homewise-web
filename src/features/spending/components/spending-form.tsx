@@ -14,9 +14,10 @@ import { UnpaidBillNote } from '@/features/bills/components/unpaid-bill-note';
 import { UsagePreview } from '@/features/budget/components/usage-preview';
 import { useCategories } from '@/features/categories/api';
 import { CategoryPicker } from '@/features/categories/components/category-picker';
+import { ScanBill } from '@/features/scan/components/scan-bill';
 import { earliestEntryDate, todayIST } from '@/lib/dates';
 import { applyApiErrors } from '@/lib/form-errors';
-import type { FailedFile, Occurrence, SpendingEntryDetail } from '@/types/api';
+import type { FailedFile, Occurrence, ScannedBill, SpendingEntryDetail } from '@/types/api';
 import { MAX_FILES_PER_ENTRY } from '@/types/constants';
 import { useCreateSpending, useUpdateSpending } from '../api';
 import { spendingFormSchema, type SpendingFormInput, type SpendingFormValues } from '../schemas';
@@ -44,6 +45,7 @@ export function SpendingForm({ entry, onSaved, onCancel }: SpendingFormProps) {
     control,
     handleSubmit,
     setError,
+    setValue,
     formState: { errors },
   } = useForm<SpendingFormInput, unknown, SpendingFormValues>({
     resolver: zodResolver(spendingFormSchema),
@@ -57,6 +59,17 @@ export function SpendingForm({ entry, onSaved, onCancel }: SpendingFormProps) {
   const bucket = categories.find((c) => c.id === categoryId)?.bucket;
   const month = (date || todayIST()).slice(0, 7);
   const removed = entry && entry.date.startsWith(month) && entry.category.bucket === bucket ? Number(entry.amount) : 0;
+
+  /** Fills in what the bill showed, leaves the rest as typed, and attaches the bill if there's room. */
+  function applyScan(bill: ScannedBill, file: File) {
+    const fill = { shouldDirty: true, shouldValidate: true };
+    if (bill.amount) setValue('amount', bill.amount, fill);
+    if (bill.categoryId) setValue('categoryId', bill.categoryId, fill);
+    if (bill.date) setValue('date', bill.date, fill);
+    const note = [bill.merchant, bill.note].filter(Boolean).join(' · ').slice(0, 200);
+    if (note) setValue('note', note, fill);
+    if (files.length < MAX_FILES_PER_ENTRY && !files.includes(file)) setFiles([...files, file]);
+  }
 
   const onSubmit = handleSubmit((values) => {
     setFormError(null);
@@ -80,6 +93,8 @@ export function SpendingForm({ entry, onSaved, onCancel }: SpendingFormProps) {
     <>
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
         {formError && <Alert>{formError}</Alert>}
+
+        {!entry && <ScanBill onScanned={applyScan} />}
 
         <Field id="spending-amount" label="Amount" error={errors.amount?.message}>
           {(control) => (

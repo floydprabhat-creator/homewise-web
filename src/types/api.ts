@@ -239,3 +239,15 @@ export type AppNotification = {
 };
 
 export type NotificationList = { items: AppNotification[]; unreadCount: number; page: number; pageSize: number };
+
+/** POST /scan: suggested form values read from a bill photo or PDF. Null when the bill doesn't clearly show it. */
+export type ScannedBill = {
+  readable: boolean;
+  merchant: string | null;
+  amount: string | null;
+  date: string | null;
+  dueDate: string | null;
+  categoryId: string | null;
+  frequency: Frequency | null;
+  note: string | null;
+};
