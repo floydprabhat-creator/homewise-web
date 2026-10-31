@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { FieldError } from './field-error';
 import { Label } from './label';
 
-export type FieldControlProps = {
+type FieldControlProps = {
   id: string;
   'aria-invalid'?: true;
   'aria-describedby'?: string;

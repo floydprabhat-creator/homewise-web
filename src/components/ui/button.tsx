@@ -22,8 +22,8 @@ const sizes = {
   icon: 'size-10',
 } as const;
 
-export type ButtonVariant = keyof typeof variants;
-export type ButtonSize = keyof typeof sizes;
+type ButtonVariant = keyof typeof variants;
+type ButtonSize = keyof typeof sizes;
 
 /** Button classes, also used to style links that look like buttons. */
 export function buttonStyles({

@@ -46,7 +46,7 @@ export function useSendPasswordCode() {
   });
 }
 
-export type ChangePasswordInput = { newPassword: string } & ({ currentPassword: string } | { code: string });
+type ChangePasswordInput = { newPassword: string } & ({ currentPassword: string } | { code: string });
 
 /** This device gets a fresh session cookie; every other device is signed out. */
 export function useChangePassword() {

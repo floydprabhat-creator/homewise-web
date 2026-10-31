@@ -35,7 +35,7 @@ type Draft = {
 
 const storageKey = (userId: string) => `hw-onboarding:${userId}`;
 
-export function recommendedSplit(rec: Recommendation): SplitDraft {
+function recommendedSplit(rec: Recommendation): SplitDraft {
   return {
     allocations: Object.fromEntries(BUCKETS.map((b) => [b, String(rec.allocations[b])])) as SplitDraft['allocations'],
     targets: rec.targets.map((t) => ({ key: t.categoryName, name: t.categoryName, percent: String(t.percent) })),

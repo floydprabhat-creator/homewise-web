@@ -19,7 +19,7 @@ export function useBudget(month: string) {
   });
 }
 
-export type UpsertBudgetInput = {
+type UpsertBudgetInput = {
   totalAmount: string;
   allocations: Allocations;
   targets: { categoryId: string; percent: number }[];
@@ -37,7 +37,7 @@ export function useUpsertBudget(month: string) {
   });
 }
 
-export type OnboardingInput = {
+type OnboardingInput = {
   mode: HouseholdType;
   familyName?: string;
   totalAmount: string;

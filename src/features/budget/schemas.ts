@@ -9,7 +9,7 @@ export type SplitDraft = {
   targets: { key: string; name: string; percent: string }[];
 };
 
-export const toHundredths = (v: string | number) => Math.round(Number(v || 0) * 100);
+const toHundredths = (v: string | number) => Math.round(Number(v || 0) * 100);
 const hasTwoDecimalsAtMost = (v: string) => /^\d{0,3}(\.\d{0,2})?$/.test(v.trim());
 
 export type SplitCheck = {

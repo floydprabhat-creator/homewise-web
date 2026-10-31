@@ -1,6 +1,6 @@
 import { LayoutDashboard, PieChart, ReceiptText, Tag, Users, WalletCards, type LucideIcon } from 'lucide-react';
 
-export type NavItem = { href: string; label: string; icon: LucideIcon };
+type NavItem = { href: string; label: string; icon: LucideIcon };
 
 export const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
