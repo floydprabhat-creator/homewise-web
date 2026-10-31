@@ -30,8 +30,12 @@ export function useUpdateCategory() {
       api<{ category: Category }>(`/categories/${id}`, { method: 'PATCH', body: input }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      // Spending rows show category names.
+      // Category names also appear in spending rows, the dashboard breakdown, budget targets and bills.
       queryClient.invalidateQueries({ queryKey: queryKeys.spendingAll });
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard });
+      queryClient.invalidateQueries({ queryKey: ['budget'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.billsAll });
+      queryClient.invalidateQueries({ queryKey: queryKeys.occurrencesAll });
     },
   });
 }
