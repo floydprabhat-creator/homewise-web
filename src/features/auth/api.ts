@@ -33,6 +33,23 @@ export function useRegister() {
   });
 }
 
+/** Forgot password, logged out. The answer is the same whether or not the email has an account. */
+export function useSendResetCode() {
+  return useMutation({
+    mutationFn: (email: string) => api<{ sentTo: string }>('/auth/password-reset/code', { method: 'POST', body: { email } }),
+  });
+}
+
+/** Sets the new password and signs this device in; every other device is signed out. */
+export function useResetPassword() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { email: string; code: string; newPassword: string }) =>
+      api<Session>('/auth/password-reset', { method: 'POST', body: input }),
+    onSuccess: (session) => queryClient.setQueryData(queryKeys.me, session),
+  });
+}
+
 export function useLogout() {
   const queryClient = useQueryClient();
   return useMutation({

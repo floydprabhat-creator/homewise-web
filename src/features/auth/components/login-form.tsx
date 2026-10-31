@@ -5,7 +5,7 @@ import { Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Alert } from '@/components/ui/alert';
 import { Button, buttonStyles } from '@/components/ui/button';
 import { Divider } from '@/components/ui/divider';
@@ -32,8 +32,12 @@ export function LoginForm({ defaultEmail, onLoggedIn, embedded = false }: LoginF
     register,
     handleSubmit,
     setError,
+    control,
     formState: { errors },
   } = useForm<LoginValues>({ resolver: zodResolver(loginSchema), defaultValues: { email: defaultEmail ?? '', password: '' } });
+
+  // Carried to the forgot-password page so it needn't be typed twice.
+  const typedEmail = useWatch({ control, name: 'email' }).trim();
 
   const onSubmit = handleSubmit((values) => {
     setFormError(null);
@@ -60,7 +64,14 @@ export function LoginForm({ defaultEmail, onLoggedIn, embedded = false }: LoginF
         <PasswordField
           id="password"
           label="Password"
-          aside="At least 8 characters"
+          aside={
+            <Link
+              href={typedEmail ? `/forgot-password?email=${encodeURIComponent(typedEmail)}` : '/forgot-password'}
+              className="font-bold text-accent hover:underline"
+            >
+              Forgot password?
+            </Link>
+          }
           autoComplete="current-password"
           className="h-12"
           error={errors.password?.message}
