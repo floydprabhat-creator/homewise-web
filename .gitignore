@@ -6,3 +6,6 @@ out/
 next-env.d.ts
 *.tsbuildinfo
 .DS_Store
+
+# Written by next dev for AI coding tools
+AGENTS.md
