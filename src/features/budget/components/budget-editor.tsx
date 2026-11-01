@@ -1,17 +1,19 @@
 'use client';
 
-import { Check } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { apiErrorMessage } from '@/lib/form-errors';
+import { useScanStatus } from '@/features/scan/api';
 import { formatINR } from '@/lib/format';
-import type { Budget, Category, Recommendation } from '@/types/api';
+import type { Budget, BudgetAdvice, Category, Recommendation } from '@/types/api';
 import { BUCKETS } from '@/types/constants';
 import { useUpsertBudget } from '../api';
 import { allocationsToNumbers, checkAmount, checkSplit, normalizeAmount, type SplitDraft } from '../schemas';
 import { BudgetAmountField } from './budget-amount-step';
+import { BudgetAssistant } from './budget-assistant';
 import { SplitEditor } from './split-editor';
 
 type Initial = { amount: string; split: SplitDraft };
@@ -54,6 +56,9 @@ export function BudgetEditor({ month, budget, recommendation, categories, canEdi
   const [split, setSplit] = useState(initial.split);
   const [showErrors, setShowErrors] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [assistantOpen, setAssistantOpen] = useState(false);
+  // The same AI setup reads bills; without it the assistant isn't offered.
+  const { data: ai } = useScanStatus();
 
   const amountError = checkAmount(amount);
   const check = checkSplit(split);
@@ -73,6 +78,16 @@ export function BudgetEditor({ month, budget, recommendation, categories, canEdi
         <SplitEditor totalAmount={budget.totalAmount} draft={initial.split} check={checkSplit(initial.split)} />
       </div>
     );
+  }
+
+  /** Fills the editor from the assistant; the amount only when it's still empty. Saving is up to the head. */
+  function applyAdvice(advice: BudgetAdvice, income: string) {
+    setSplit({
+      allocations: Object.fromEntries(BUCKETS.map((b) => [b, String(advice.allocations[b])])) as SplitDraft['allocations'],
+      targets: advice.targets.map((t) => ({ key: t.categoryId, name: t.name, percent: String(t.percent) })),
+    });
+    if (!amount.trim() && income) setAmount(income);
+    setSaved(false);
   }
 
   function save() {
@@ -112,6 +127,21 @@ export function BudgetEditor({ month, budget, recommendation, categories, canEdi
           error={showErrors ? amountError : undefined}
         />
       </div>
+      {ai?.enabled && (
+        <div className="flex flex-wrap items-center gap-3 rounded-card border-[1.5px] border-dashed border-primary-soft p-4">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary-subtle text-accent">
+            <Sparkles aria-hidden className="size-[18px]" />
+          </span>
+          <div className="flex min-w-48 flex-1 flex-col">
+            <span className="text-caption font-semibold">Not sure how to split it?</span>
+            <span className="text-xs text-muted-foreground">Answer a few questions and get a split suggested for your household.</span>
+          </div>
+          <Button variant="outline" onClick={() => setAssistantOpen(true)}>
+            Plan with AI
+          </Button>
+        </div>
+      )}
+      <BudgetAssistant open={assistantOpen} onClose={() => setAssistantOpen(false)} onApply={applyAdvice} />
       <SplitEditor
         totalAmount={amountError ? '0' : normalizeAmount(amount)}
         draft={split}

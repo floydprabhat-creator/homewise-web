@@ -251,3 +251,28 @@ export type ScannedBill = {
   frequency: Frequency | null;
   note: string | null;
 };
+
+/** POST /budgets/advice: the budget assistant's questions, plus change requests after a first suggestion. */
+export type BudgetAdviceRequest = {
+  answers: {
+    monthlyIncome: string;
+    householdSize: '1' | '2' | '3-4' | '5+';
+    housingCost: string;
+    otherEmis: string;
+    emergencySavings: 'NONE' | 'UNDER_3_MONTHS' | '3_TO_6_MONTHS' | 'OVER_6_MONTHS';
+    goal: 'EMERGENCY_FUND' | 'HOME' | 'RETIREMENT' | 'CHILD_EDUCATION' | 'TRAVEL' | 'DEBT_FREE';
+    risk: 'LOW' | 'MEDIUM' | 'HIGH';
+  };
+  requests: string[];
+  current?: { allocations: Record<Bucket, number>; targets: { categoryId: string; percent: number }[] };
+};
+
+/** A suggested split, already checked by the API against the budget rules. */
+export type BudgetAdvice = {
+  allocations: Record<Bucket, number>;
+  targets: { categoryId: string; name: string; percent: number }[];
+  summary: string;
+  investing: { type: string; note: string }[];
+  /** The answer to the latest change request, if there was one. */
+  reply: string | null;
+};

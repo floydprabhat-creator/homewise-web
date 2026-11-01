@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { queryKeys } from '@/lib/query-keys';
-import type { Allocations, Budget, BudgetResponse, Recommendation, Session } from '@/types/api';
+import type { Allocations, Budget, BudgetAdvice, BudgetAdviceRequest, BudgetResponse, Recommendation, Session } from '@/types/api';
 import type { HouseholdType } from '@/types/constants';
 
 export function useRecommendation() {
@@ -54,5 +54,12 @@ export function useOnboarding() {
       queryClient.invalidateQueries({ queryKey: ['budget'] });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard });
     },
+  });
+}
+
+/** Head only. Suggests a split from the assistant's answers; nothing is saved. */
+export function useBudgetAdvice() {
+  return useMutation({
+    mutationFn: (input: BudgetAdviceRequest) => api<BudgetAdvice>('/budgets/advice', { method: 'POST', body: input }),
   });
 }
