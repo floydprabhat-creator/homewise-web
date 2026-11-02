@@ -46,9 +46,10 @@ export function useInvites({ enabled = true } = {}) {
   });
 }
 
+/** Refreshes the list after success or failure: a failed request may still have changed it (e.g. a timeout after saving). */
 function useInviteMutation<T>(mutationFn: (arg: T) => Promise<unknown>) {
   const queryClient = useQueryClient();
-  return useMutation({ mutationFn, onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.invites }) });
+  return useMutation({ mutationFn, onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.invites }) });
 }
 
 export const useCreateInvite = () =>
