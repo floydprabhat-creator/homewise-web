@@ -58,7 +58,9 @@ Forms check input with Zod for instant feedback; the API is the real check. Only
 
 ## Deploying
 
-Built for Vercel: set `API_URL` to the API's public URL and deploy. No other settings are needed.
+Live at https://homewise-web-dusky.vercel.app, on Vercel. Pushes to `main` deploy automatically.
+
+The only setting is `API_URL`, the API's public URL (now `https://homewise-api-5wmf.onrender.com`, with no trailing slash or `/api`). The API runs on Render's free plan, which sleeps when idle, so the first request after a quiet spell can take up to a minute.
 
 ## Commits
 
